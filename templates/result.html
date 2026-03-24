@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Report - Cyber Threat Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <style>
+        :root {
+            --primary: #ff00cc;
+            --secondary: #9333ea;
+            --accent-pink: #f9a8d4;
+            --text-main: #ffffff;
+            --text-secondary: #cbd5f5;
+            --bg-dark: #0f0126;
+            --bg-gradient: linear-gradient(135deg, #0f0126, #1a0033, #2a004f);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --safe: #22c55e;
+            --warning: #ff00cc;
+            --danger: #ef4444;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .main-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .main-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: radial-gradient(circle at bottom left, rgba(255, 0, 255, 0.1), transparent);
+            pointer-events: none;
+        }
+
+        .dashboard-card {
+            width: 100%;
+            max-width: 900px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.2), 0 0 80px rgba(255, 0, 255, 0.1);
+            padding: 50px;
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .status-hero {
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(15, 1, 38, 0.4);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .status-hero:hover { transform: scale(1.02); }
+
+        .result-icon {
+            font-size: 6rem;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+
+        .status-text {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+
+        .risk-badge {
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .info-card {
+            background: rgba(15, 1, 38, 0.4);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-label {
+            color: var(--accent-pink);
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 0 8px rgba(255, 0, 204, 0.2);
+        }
+
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            word-break: break-all;
+        }
+
+        .reasons-box {
+            background: rgba(15, 1, 38, 0.4);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 50px;
+        }
+
+        .reason-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary);
+            transition: transform 0.2s ease;
+        }
+
+        .reason-item:hover { transform: translateX(10px); background: rgba(255, 255, 255, 0.05); }
+
+        .reason-icon {
+            margin-right: 20px;
+            margin-top: 5px;
+            color: var(--primary);
+        }
+
+        .action-banner {
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .bg-success-glow { background: rgba(34, 197, 94, 0.1); color: var(--safe); border: 1px solid rgba(34, 197, 94, 0.2); }
+        .bg-warning-glow { background: rgba(255, 0, 204, 0.1); color: var(--warning); border: 1px solid rgba(255, 0, 204, 0.2); }
+        .bg-danger-glow { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: scale(1.05) translateX(-5px);
+            box-shadow: 0 0 20px rgba(255, 0, 204, 0.3);
+        }
+
+        code { color: #ff00cc; background: rgba(255, 0, 204, 0.05); padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+        
+        .text-safe { color: var(--safe) !important; }
+        .text-warning { color: var(--warning) !important; }
+        .text-danger { color: var(--danger) !important; }
+        .bg-safe { background-color: var(--safe) !important; color: white !important; }
+        .bg-warning { background-color: var(--warning) !important; color: white !important; }
+        .bg-danger { background-color: var(--danger) !important; color: white !important; }
+
+        .progress-container { margin-top: 25px; }
+        .progress { background: rgba(255, 255, 255, 0.05); height: 12px; border-radius: 10px; border: 1px solid var(--glass-border); }
+        .progress-bar { box-shadow: 0 0 15px currentColor; }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h5 class="mb-0 text-muted small fw-bold" style="letter-spacing: 2px;">REPORT ID: #{{ range(100000, 999999) | random }}</h5>
+                <a href="/" class="btn btn-back"><i class="fas fa-chevron-left me-2"></i> RETURN TO HUB</a>
+            </div>
+
+            <!-- Status Hero -->
+            <div class="status-hero text-{{ results.final_decision.risk_color }}">
+                <div class="result-icon">
+                    {% if results.final_decision.status == 'Safe' %}
+                        <i class="fas fa-shield-check"></i>
+                    {% elif results.final_decision.status == 'Suspicious' %}
+                        <i class="fas fa-shield-exclamation"></i>
+                    {% else %}
+                        <i class="fas fa-biohazard"></i>
+                    {% endif %}
+                </div>
+                <div class="status-text">{{ results.final_decision.status }}</div>
+                <span class="badge risk-badge bg-{{ results.final_decision.risk_color }}">
+                    {{ results.final_decision.risk_level }} RISK LEVEL
+                </span>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label"><i class="fas fa-file-shield me-2"></i> 📄 OBJECT</div>
+                    <div class="info-value">{{ results.filename }}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label"><i class="fas fa-fingerprint me-2"></i> FINGERPRINT</div>
+                    <div class="info-value"><code>{{ results.file_type }}</code></div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label"><i class="fas fa-virus me-2"></i> 🦠 VIRUS INTELLIGENCE</div>
+                    <div class="info-value">{{ results.vt_status }}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label"><i class="fas fa-link me-2"></i> 🔗 REPUTATION</div>
+                    <div class="info-value">{{ results.url_status }}</div>
+                </div>
+
+                {% if results.ai_result != "Not applicable" %}
+                <div class="info-card" style="grid-column: span 2; border-color: rgba(255, 0, 204, 0.3);">
+                    <div class="info-label"><i class="fas fa-brain-circuit me-2"></i> 🧠 AI IMAGE FORENSICS</div>
+                    <div class="info-value">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="{% if 'AI Generated' in results.ai_result %}text-danger{% elif 'Possibly' in results.ai_result or 'Signals' in results.ai_result %}text-warning{% else %}text-safe{% endif %}">
+                                    {{ results.ai_result }}
+                                </span>
+                            <span class="badge bg-dark border border-secondary border-opacity-50">
+                                CONFIDENCE: {{ results.ai_confidence }}%
+                            </span>
+                        </div>
+                        
+                        <div class="progress">
+                            <div class="progress-bar {% if results.ai_confidence >= 60 %}bg-danger{% elif results.ai_confidence >= 30 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ results.ai_confidence }}%;" 
+                                 aria-valuenow="{{ results.ai_confidence }}" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+
+                        {% if results.ai_reasons %}
+                        <div class="mt-4">
+                            {% for reason in results.ai_reasons %}
+                            <div class="small mb-1 fw-bold" style="color: var(--text-secondary);">
+                                <i class="fas fa-microscope me-2 text-primary"></i> {{ reason.upper() }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Analysis Box -->
+            <div class="reasons-box">
+                <h6 class="fw-bold mb-4 text-uppercase" style="letter-spacing: 3px; color: var(--accent-pink); font-size: 1.1rem; text-shadow: 0 0 8px rgba(255, 0, 204, 0.2);">
+                    Heuristic Evidence Logs
+                </h6>
+                {% if results.final_decision.reasons %}
+                    {% for reason in results.final_decision.reasons %}
+                        <div class="reason-item">
+                            <i class="fas fa-terminal reason-icon"></i>
+                            <span class="fw-bold" style="font-size: 16px; color: var(--text-main);">{{ reason }}</span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-2">
+                        <span class="text-safe fw-bold" style="letter-spacing: 1px; font-size: 18px;"><i class="fas fa-check-double me-2"></i> SYSTEM INTEGRITY VERIFIED: NO THREATS FOUND</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Banner -->
+            <div class="action-banner bg-{{ results.final_decision.risk_color }}-glow">
+                <i class="fas fa-user-shield me-2"></i> RECOMMENDED PROTOCOL: {{ results.final_decision.action }}
+            </div>
+
+            <div class="text-center mt-5 opacity-50">
+                <small class="fw-bold" style="letter-spacing: 2px;">CYBER-DETECTOR v5.0 | HYBRID-AI FORENSIC ENGINE</small>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
